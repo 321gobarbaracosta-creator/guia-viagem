@@ -518,223 +518,348 @@ function TripScreen({ navigate }) {
 function DayBlock({ day, isOpen, onToggle }) {
   const activities = day.activities || [];
 
-  const hasFlight = activities.some((a) => a.icon === "flight" || a.icon === "land");
-  const hasHotel = activities.some((a) => a.icon === "hotel");
-  const hasCar = activities.some((a) => a.icon === "car");
-  const hasFood = activities.some((a) => a.icon === "food");
-  const hasLandmark = activities.some((a) => a.icon === "landmark");
-  const hasShop = activities.some((a) => a.icon === "shop");
+  const hasFlight = activities.some(
+    (a) =>
+      a.type === "flight" ||
+      a.kind === "flight" ||
+      a.title?.toLowerCase().includes("voo") ||
+      a.title?.toLowerCase().includes("embarque")
+  );
 
-  let type = "experience";
+  const hasArrival = activities.some(
+    (a) =>
+      a.type === "arrival" ||
+      a.kind === "arrival" ||
+      a.title?.toLowerCase().includes("chegada")
+  );
 
-  if (hasFlight) type = "flight";
-  else if (hasHotel || hasCar) type = "arrival";
-  else if (hasFood && !hasLandmark && !hasShop) type = "food";
-  else if (hasShop && !hasLandmark) type = "shopping";
-  else if (hasLandmark) type = "experience";
+  const hasFood = activities.some(
+    (a) =>
+      a.type === "food" ||
+      a.kind === "food" ||
+      a.title?.toLowerCase().includes("almoço") ||
+      a.title?.toLowerCase().includes("jantar") ||
+      a.title?.toLowerCase().includes("café")
+  );
 
-  const styles = {
-    flight: {
-      eyebrow: "DIA DE VIAGEM",
-      icon: Plane,
-      iconBg: "bg-[#22A8C9]/10",
-      iconColor: "text-[#22A8C9]",
-      accent: "bg-[#22A8C9]",
-    },
-    arrival: {
-      eyebrow: "CHEGADA & HOTEL",
-      icon: DoorOpen,
-      iconBg: "bg-[#E05220]/10",
-      iconColor: "text-[#E05220]",
-      accent: "bg-[#E05220]",
-    },
-    food: {
-      eyebrow: "EXPERIÊNCIAS",
-      icon: Utensils,
-      iconBg: "bg-[#E05220]/10",
-      iconColor: "text-[#E05220]",
-      accent: "bg-[#E05220]",
-    },
-    shopping: {
-      eyebrow: "PARA DESCOBRIR",
-      icon: ShoppingBag,
-      iconBg: "bg-[#22A8C9]/10",
-      iconColor: "text-[#22A8C9]",
-      accent: "bg-[#22A8C9]",
-    },
-    experience: {
-      eyebrow: "EXPERIÊNCIAS",
-      icon: Landmark,
-      iconBg: "bg-[#22A8C9]/10",
-      iconColor: "text-[#22A8C9]",
-      accent: "bg-[#22A8C9]",
-    },
-  };
+  const hasShopping = activities.some(
+    (a) =>
+      a.type === "shopping" ||
+      a.kind === "shopping" ||
+      a.title?.toLowerCase().includes("mercado") ||
+      a.title?.toLowerCase().includes("compras")
+  );
 
-  const style = styles[type];
-  const HeaderIcon = style.icon;
+  let dayType = "experience";
+  let accent = "#22A8C9";
+  let label = "EXPERIÊNCIAS";
+  let Icon = MapPin;
+
+  if (hasFlight) {
+    dayType = "flight";
+    accent = "#E05220";
+    label = "DIA DE VIAGEM";
+    Icon = Plane;
+  } else if (hasArrival) {
+    dayType = "arrival";
+    accent = "#22A8C9";
+    label = "CHEGADA";
+    Icon = Navigation;
+  } else if (hasFood) {
+    dayType = "food";
+    accent = "#E05220";
+    label = "GASTRONOMIA";
+    Icon = Utensils;
+  } else if (hasShopping) {
+    dayType = "shopping";
+    accent = "#22A8C9";
+    label = "DESCOBERTAS";
+    Icon = ShoppingBag;
+  }
 
   const firstActivity = activities[0];
-  const lastActivity = activities[activities.length - 1];
+  const mainActivity = activities[0];
 
   return (
-    <Card className="overflow-hidden">
-      {/* CABEÇALHO EDITORIAL */}
+    <div
+      className={`day-block day-${dayType} ${
+        isOpen ? "day-open" : "day-closed"
+      }`}
+      style={{ "--day-accent": accent }}
+    >
       <button
+        type="button"
         onClick={onToggle}
-        aria-expanded={isOpen}
-        className="w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#22A8C9]"
+        className="day-header"
       >
-        <div className="relative px-5 pt-5 pb-4">
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#E05220]" />
+        <div className="day-date">
+          <strong>{day.date?.split(" ")[0] || day.date}</strong>
+          <span>{day.date?.split(" ").slice(1).join(" ")}</span>
+        </div>
 
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <div
-                className={`w-12 h-12 rounded-2xl ${style.iconBg} ${style.iconColor} flex items-center justify-center shrink-0`}
-              >
-                <HeaderIcon size={21} strokeWidth={2} />
-              </div>
-
-              <div>
-                <p className="font-poppins font-semibold text-[10px] tracking-[0.16em] uppercase text-[#22A8C9]">
-                  {style.eyebrow}
-                </p>
-
-                <h2 className="font-poppins font-bold text-[16px] text-[#1F2937] leading-tight mt-1">
-                  {day.title}
-                </h2>
-
-                <p className="font-poppins font-light text-[12px] text-[#9CA3AF] mt-1">
-                  {day.date} · {day.weekday}
-                </p>
-              </div>
-            </div>
-
-            <div
-              className={`w-8 h-8 rounded-full bg-[#FAF8F5] flex items-center justify-center shrink-0 transition-transform ${
-                isOpen ? "rotate-180" : ""
-              }`}
-            >
-              <ChevronDown size={16} className="text-[#6B7280]" />
-            </div>
+        <div className="day-heading">
+          <div className="day-label">
+            <Icon size={14} strokeWidth={2.2} />
+            {label}
           </div>
 
-          {/* RESUMO DO DIA */}
-          {!isOpen && (
-            <div className="mt-4 pt-4 border-t border-black/[0.05] flex items-center gap-2">
-              <Clock size={13} className="text-[#9CA3AF]" />
+          <h3>{day.title}</h3>
 
-              <p className="font-poppins font-light text-[12px] text-[#6B7280] truncate">
-                {firstActivity?.time || "Dia planejado"}
-                {lastActivity && activities.length > 1
-                  ? ` · ${activities.length} momentos programados`
-                  : ""}
-              </p>
-            </div>
+          {day.subtitle && (
+            <p>{day.subtitle}</p>
           )}
+        </div>
+
+        <div className="day-toggle">
+          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </div>
       </button>
 
-      {/* CONTEÚDO ABERTO */}
       {isOpen && (
-        <div className="px-5 pb-5">
-          {/* Destaque especial para dias de voo */}
-          {type === "flight" && activities.length >= 2 && (
-            <div className="mb-5 rounded-[18px] bg-[#F7FBFC] border border-[#22A8C9]/10 p-4">
-              <div className="flex items-center justify-between gap-3">
+        <div className="day-content">
+
+          {/* =========================
+              VOOS
+          ========================== */}
+          {dayType === "flight" && (
+            <div className="flight-feature">
+              <div className="flight-route">
                 <div>
-                  <p className="font-poppins font-extrabold text-[20px] text-[#1F2937]">
-                    {firstActivity?.title || "Partida"}
-                  </p>
-                  <p className="font-poppins font-light text-[11px] text-[#6B7280] mt-1">
-                    {firstActivity?.time || ""}
-                  </p>
+                  <span>ORIGEM</span>
+                  <strong>
+                    {firstActivity?.origin ||
+                      firstActivity?.from ||
+                      firstActivity?.title ||
+                      "—"}
+                  </strong>
                 </div>
 
-                <div className="flex-1 flex items-center gap-2 px-2">
-                  <span className="h-px flex-1 bg-[#22A8C9]/20" />
-                  <Plane size={15} className="text-[#E05220]" />
-                  <span className="h-px flex-1 bg-[#22A8C9]/20" />
+                <div className="flight-line">
+                  <Plane size={20} />
                 </div>
 
-                <div className="text-right">
-                  <p className="font-poppins font-extrabold text-[20px] text-[#1F2937]">
-                    {lastActivity?.title || "Chegada"}
-                  </p>
-                  <p className="font-poppins font-light text-[11px] text-[#6B7280] mt-1">
-                    {lastActivity?.time || ""}
-                  </p>
+                <div className="flight-destination">
+                  <span>DESTINO</span>
+                  <strong>
+                    {firstActivity?.destination ||
+                      firstActivity?.to ||
+                      "—"}
+                  </strong>
                 </div>
+              </div>
+
+              <div className="flight-details">
+                {activities.map((activity, index) => (
+                  <div className="flight-detail" key={index}>
+                    <span>{activity.time || "—"}</span>
+                    <div>
+                      <strong>{activity.title}</strong>
+                      {activity.description && (
+                        <p>{activity.description}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
-          {/* TIMELINE */}
-          <div className="relative pl-1">
-            <div className={`absolute left-[15px] top-1 bottom-1 w-px ${style.accent}/20`} />
+          {/* =========================
+              CHEGADA
+          ========================== */}
+          {dayType === "arrival" && (
+            <div className="arrival-feature">
+              {mainActivity && (
+                <div className="arrival-highlight">
+                  <div className="arrival-icon">
+                    <Navigation size={22} />
+                  </div>
 
-            <div className="space-y-5">
-              {activities.map((act, i) => {
-                const Icon = activityIcon[act.icon] || MapPin;
+                  <div>
+                    <span>PRIMEIRO MOMENTO</span>
+                    <h4>{mainActivity.title}</h4>
 
-                return (
-                  <div key={i} className="relative flex gap-3">
-                    <div
-                      className={`relative z-10 w-8 h-8 rounded-full ${style.iconBg} border-2 border-[#FAF8F5] flex items-center justify-center ${style.iconColor} shrink-0`}
-                    >
-                      <Icon size={13} strokeWidth={2.2} />
+                    {mainActivity.description && (
+                      <p>{mainActivity.description}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="arrival-list">
+                {activities.slice(1).map((activity, index) => (
+                  <div className="arrival-item" key={index}>
+                    <div className="activity-time">
+                      {activity.time || "—"}
                     </div>
 
-                    <div className="flex-1 min-w-0 pt-0.5 pb-1">
-                      <p className={`font-poppins font-semibold text-[12px] ${style.iconColor}`}>
-                        {act.time}
-                      </p>
+                    <div>
+                      <strong>{activity.title}</strong>
 
-                      <p className="font-poppins font-semibold text-[14px] text-[#1F2937] mt-0.5">
-                        {act.title}
-                      </p>
-
-                      {act.description && (
-                        <p className="font-poppins font-light text-[12.5px] text-[#6B7280] mt-1 leading-relaxed">
-                          {act.description}
-                        </p>
+                      {activity.description && (
+                        <p>{activity.description}</p>
                       )}
 
-                      {act.location && (
-                        <div className="mt-2">
-                          <GhostLink href={mapsUrlFor(act.location)}>
-                            <MapPin size={12} />
-                            Ver no mapa
-                          </GhostLink>
-                        </div>
+                      {activity.mapUrl && (
+                        <a
+                          href={activity.mapUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <MapPin size={13} />
+                          Ver no mapa
+                        </a>
                       )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* FECHAMENTO */}
-          {type === "arrival" && (
-            <div className="mt-5 pt-4 border-t border-black/[0.05]">
-              <p className="font-poppins font-light italic text-[12px] text-[#9CA3AF]">
-                Chegue com calma. O importante é aproveitar o começo da viagem.
-              </p>
+                ))}
+              </div>
             </div>
           )}
 
-          {type === "food" && (
-            <div className="mt-5 pt-4 border-t border-black/[0.05]">
-              <p className="font-poppins font-light italic text-[12px] text-[#9CA3AF]">
-                Um bom roteiro também passa pela mesa. 🍽️
-              </p>
+          {/* =========================
+              EXPERIÊNCIAS
+          ========================== */}
+          {dayType === "experience" && (
+            <div className="experience-feature">
+              {mainActivity && (
+                <div className="experience-main">
+                  <div className="experience-number">01</div>
+
+                  <div className="experience-main-content">
+                    <span>
+                      {mainActivity.time || "AO LONGO DO DIA"}
+                    </span>
+
+                    <h4>{mainActivity.title}</h4>
+
+                    {mainActivity.description && (
+                      <p>{mainActivity.description}</p>
+                    )}
+
+                    {mainActivity.mapUrl && (
+                      <a
+                        href={mainActivity.mapUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <MapPin size={13} />
+                        Ver no mapa
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activities.slice(1).length > 0 && (
+                <div className="experience-secondary">
+                  {activities.slice(1).map((activity, index) => (
+                    <div className="experience-item" key={index}>
+                      <span>
+                        {activity.time || "—"}
+                      </span>
+
+                      <div>
+                        <strong>{activity.title}</strong>
+
+                        {activity.description && (
+                          <p>{activity.description}</p>
+                        )}
+
+                        {activity.mapUrl && (
+                          <a
+                            href={activity.mapUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <MapPin size={13} />
+                            Ver no mapa
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
+
+          {/* =========================
+              GASTRONOMIA
+          ========================== */}
+          {dayType === "food" && (
+            <div className="food-feature">
+              {activities.map((activity, index) => (
+                <div className="food-item" key={index}>
+                  <div className="food-time">
+                    {activity.time || "—"}
+                  </div>
+
+                  <div className="food-icon">
+                    <Utensils size={17} />
+                  </div>
+
+                  <div className="food-content">
+                    <h4>{activity.title}</h4>
+
+                    {activity.description && (
+                      <p>{activity.description}</p>
+                    )}
+
+                    {activity.mapUrl && (
+                      <a
+                        href={activity.mapUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <MapPin size={13} />
+                        Ver no mapa
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* =========================
+              COMPRAS / DESCOBERTAS
+          ========================== */}
+          {dayType === "shopping" && (
+            <div className="shopping-feature">
+              {activities.map((activity, index) => (
+                <div className="shopping-item" key={index}>
+                  <div className="shopping-number">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+
+                  <div>
+                    <span>{activity.time || "AO LONGO DO DIA"}</span>
+                    <h4>{activity.title}</h4>
+
+                    {activity.description && (
+                      <p>{activity.description}</p>
+                    )}
+
+                    {activity.mapUrl && (
+                      <a
+                        href={activity.mapUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <MapPin size={13} />
+                        Ver no mapa
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
         </div>
       )}
-    </Card>
+    </div>
   );
 }
 
