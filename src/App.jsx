@@ -516,57 +516,196 @@ function TripScreen({ navigate }) {
    ========================================================================= */
 
 function DayBlock({ day, isOpen, onToggle }) {
+  const activities = day.activities || [];
+
+  const hasFlight = activities.some((a) => a.icon === "flight" || a.icon === "land");
+  const hasHotel = activities.some((a) => a.icon === "hotel");
+  const hasCar = activities.some((a) => a.icon === "car");
+  const hasFood = activities.some((a) => a.icon === "food");
+  const hasLandmark = activities.some((a) => a.icon === "landmark");
+  const hasShop = activities.some((a) => a.icon === "shop");
+
+  let type = "experience";
+
+  if (hasFlight) type = "flight";
+  else if (hasHotel || hasCar) type = "arrival";
+  else if (hasFood && !hasLandmark && !hasShop) type = "food";
+  else if (hasShop && !hasLandmark) type = "shopping";
+  else if (hasLandmark) type = "experience";
+
+  const styles = {
+    flight: {
+      eyebrow: "DIA DE VIAGEM",
+      icon: Plane,
+      iconBg: "bg-[#22A8C9]/10",
+      iconColor: "text-[#22A8C9]",
+      accent: "bg-[#22A8C9]",
+    },
+    arrival: {
+      eyebrow: "CHEGADA & HOTEL",
+      icon: DoorOpen,
+      iconBg: "bg-[#E05220]/10",
+      iconColor: "text-[#E05220]",
+      accent: "bg-[#E05220]",
+    },
+    food: {
+      eyebrow: "EXPERIÊNCIAS",
+      icon: Utensils,
+      iconBg: "bg-[#E05220]/10",
+      iconColor: "text-[#E05220]",
+      accent: "bg-[#E05220]",
+    },
+    shopping: {
+      eyebrow: "PARA DESCOBRIR",
+      icon: ShoppingBag,
+      iconBg: "bg-[#22A8C9]/10",
+      iconColor: "text-[#22A8C9]",
+      accent: "bg-[#22A8C9]",
+    },
+    experience: {
+      eyebrow: "EXPERIÊNCIAS",
+      icon: Landmark,
+      iconBg: "bg-[#22A8C9]/10",
+      iconColor: "text-[#22A8C9]",
+      accent: "bg-[#22A8C9]",
+    },
+  };
+
+  const style = styles[type];
+  const HeaderIcon = style.icon;
+
+  const firstActivity = activities[0];
+  const lastActivity = activities[activities.length - 1];
+
   return (
     <Card className="overflow-hidden">
+      {/* CABEÇALHO EDITORIAL */}
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="w-full flex items-center justify-between px-5 py-4 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#22A8C9] rounded-[22px]"
+        className="w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#22A8C9]"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-[#E05220]/10 flex flex-col items-center justify-center leading-none shrink-0">
-            <span className="font-poppins font-extrabold text-[13px] text-[#E05220]">
-              {day.date.split(" ")[0]}
-            </span>
-            <span className="font-poppins font-semibold text-[9px] tracking-[0.08em] uppercase text-[#E05220]/80">
-              {day.date.split(" ")[1]}
-            </span>
+        <div className="relative px-5 pt-5 pb-4">
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#E05220]" />
+
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div
+                className={`w-12 h-12 rounded-2xl ${style.iconBg} ${style.iconColor} flex items-center justify-center shrink-0`}
+              >
+                <HeaderIcon size={21} strokeWidth={2} />
+              </div>
+
+              <div>
+                <p className="font-poppins font-semibold text-[10px] tracking-[0.16em] uppercase text-[#22A8C9]">
+                  {style.eyebrow}
+                </p>
+
+                <h2 className="font-poppins font-bold text-[16px] text-[#1F2937] leading-tight mt-1">
+                  {day.title}
+                </h2>
+
+                <p className="font-poppins font-light text-[12px] text-[#9CA3AF] mt-1">
+                  {day.date} · {day.weekday}
+                </p>
+              </div>
+            </div>
+
+            <div
+              className={`w-8 h-8 rounded-full bg-[#FAF8F5] flex items-center justify-center shrink-0 transition-transform ${
+                isOpen ? "rotate-180" : ""
+              }`}
+            >
+              <ChevronDown size={16} className="text-[#6B7280]" />
+            </div>
           </div>
-          <div>
-            <p className="font-poppins font-bold text-[14.5px] text-[#1F2937]">{day.title}</p>
-            <p className="font-poppins font-light text-[12px] text-[#9CA3AF]">{day.weekday}</p>
-          </div>
+
+          {/* RESUMO DO DIA */}
+          {!isOpen && (
+            <div className="mt-4 pt-4 border-t border-black/[0.05] flex items-center gap-2">
+              <Clock size={13} className="text-[#9CA3AF]" />
+
+              <p className="font-poppins font-light text-[12px] text-[#6B7280] truncate">
+                {firstActivity?.time || "Dia planejado"}
+                {lastActivity && activities.length > 1
+                  ? ` · ${activities.length} momentos programados`
+                  : ""}
+              </p>
+            </div>
+          )}
         </div>
-        <ChevronDown
-          size={18}
-          className={`text-[#6B7280] shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
-        />
       </button>
 
+      {/* CONTEÚDO ABERTO */}
       {isOpen && (
         <div className="px-5 pb-5">
+          {/* Destaque especial para dias de voo */}
+          {type === "flight" && activities.length >= 2 && (
+            <div className="mb-5 rounded-[18px] bg-[#F7FBFC] border border-[#22A8C9]/10 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-poppins font-extrabold text-[20px] text-[#1F2937]">
+                    {firstActivity?.title || "Partida"}
+                  </p>
+                  <p className="font-poppins font-light text-[11px] text-[#6B7280] mt-1">
+                    {firstActivity?.time || ""}
+                  </p>
+                </div>
+
+                <div className="flex-1 flex items-center gap-2 px-2">
+                  <span className="h-px flex-1 bg-[#22A8C9]/20" />
+                  <Plane size={15} className="text-[#E05220]" />
+                  <span className="h-px flex-1 bg-[#22A8C9]/20" />
+                </div>
+
+                <div className="text-right">
+                  <p className="font-poppins font-extrabold text-[20px] text-[#1F2937]">
+                    {lastActivity?.title || "Chegada"}
+                  </p>
+                  <p className="font-poppins font-light text-[11px] text-[#6B7280] mt-1">
+                    {lastActivity?.time || ""}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TIMELINE */}
           <div className="relative pl-1">
-            <div className="absolute left-[15px] top-1 bottom-1 w-px bg-[#22A8C9]/20" />
-            <div className="space-y-4">
-              {day.activities.map((act, i) => {
+            <div className={`absolute left-[15px] top-1 bottom-1 w-px ${style.accent}/20`} />
+
+            <div className="space-y-5">
+              {activities.map((act, i) => {
                 const Icon = activityIcon[act.icon] || MapPin;
+
                 return (
                   <div key={i} className="relative flex gap-3">
-                    <div className="relative z-10 w-8 h-8 rounded-full bg-[#22A8C9]/10 border-2 border-[#FAF8F5] flex items-center justify-center text-[#22A8C9] shrink-0">
+                    <div
+                      className={`relative z-10 w-8 h-8 rounded-full ${style.iconBg} border-2 border-[#FAF8F5] flex items-center justify-center ${style.iconColor} shrink-0`}
+                    >
                       <Icon size={13} strokeWidth={2.2} />
                     </div>
-                    <div className="flex-1 pt-0.5 pb-1">
-                      <p className="font-poppins font-semibold text-[12px] text-[#E05220]">{act.time}</p>
-                      <p className="font-poppins font-semibold text-[13.5px] text-[#1F2937] mt-0.5">
+
+                    <div className="flex-1 min-w-0 pt-0.5 pb-1">
+                      <p className={`font-poppins font-semibold text-[12px] ${style.iconColor}`}>
+                        {act.time}
+                      </p>
+
+                      <p className="font-poppins font-semibold text-[14px] text-[#1F2937] mt-0.5">
                         {act.title}
                       </p>
-                      <p className="font-poppins font-light text-[12.5px] text-[#6B7280] mt-0.5 leading-snug">
-                        {act.description}
-                      </p>
+
+                      {act.description && (
+                        <p className="font-poppins font-light text-[12.5px] text-[#6B7280] mt-1 leading-relaxed">
+                          {act.description}
+                        </p>
+                      )}
+
                       {act.location && (
-                        <div className="mt-1.5">
+                        <div className="mt-2">
                           <GhostLink href={mapsUrlFor(act.location)}>
-                            <MapPin size={12} /> Ver no mapa
+                            <MapPin size={12} />
+                            Ver no mapa
                           </GhostLink>
                         </div>
                       )}
@@ -576,6 +715,23 @@ function DayBlock({ day, isOpen, onToggle }) {
               })}
             </div>
           </div>
+
+          {/* FECHAMENTO */}
+          {type === "arrival" && (
+            <div className="mt-5 pt-4 border-t border-black/[0.05]">
+              <p className="font-poppins font-light italic text-[12px] text-[#9CA3AF]">
+                Chegue com calma. O importante é aproveitar o começo da viagem.
+              </p>
+            </div>
+          )}
+
+          {type === "food" && (
+            <div className="mt-5 pt-4 border-t border-black/[0.05]">
+              <p className="font-poppins font-light italic text-[12px] text-[#9CA3AF]">
+                Um bom roteiro também passa pela mesa. 🍽️
+              </p>
+            </div>
+          )}
         </div>
       )}
     </Card>
