@@ -33,6 +33,7 @@ import {
   Building2,
   Ticket,
   Landmark,
+  Utensils,
   ShieldCheck,
 } from "lucide-react";
 
