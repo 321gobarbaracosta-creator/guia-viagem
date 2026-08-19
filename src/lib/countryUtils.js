@@ -1,60 +1,29 @@
 // ================================================================
 // UTILITÁRIOS DE PAÍS
 //
-// O sistema recebe o nome do destino em português e tenta descobrir
-// automaticamente o país e seu código ISO.
+// O sistema recebe o nome do destino em português e identifica
+// automaticamente o país, sem precisar manter uma lista manual
+// de países no código.
 //
 // Exemplo:
 // "Tailândia" -> TH
 // "Portugal"  -> PT
 // "Itália"    -> IT
+// "Croácia"   -> HR
+// "Japão"     -> JP
 // ================================================================
 
-const COUNTRY_ALIASES = {
-  "tailandia": "Thailand",
-  "tailândia": "Thailand",
-  "portugal": "Portugal",
-  "italia": "Italy",
-  "itália": "Italy",
-  "franca": "France",
-  "frança": "France",
-  "espanha": "Spain",
-  "alemanha": "Germany",
-  "japao": "Japan",
-  "japão": "Japan",
-  "estados unidos": "United States",
-  "eua": "United States",
-  "inglaterra": "United Kingdom",
-  "reino unido": "United Kingdom",
-  "argentina": "Argentina",
-  "chile": "Chile",
-  "peru": "Peru",
-  "colombia": "Colombia",
-  "colômbia": "Colombia",
-  "mexico": "Mexico",
-  "méxico": "Mexico",
-  "canada": "Canada",
-  "canadá": "Canada",
-  "grecia": "Greece",
-  "grécia": "Greece",
-  "turquia": "Turkey",
-  "turquia": "Turkey",
-  "austria": "Austria",
-  "áustria": "Austria",
-  "suica": "Switzerland",
-  "suíça": "Switzerland",
-  "holanda": "Netherlands",
-  "paises baixos": "Netherlands",
-  "países baixos": "Netherlands",
-  "egito": "Egypt",
-  "emirados arabes unidos": "United Arab Emirates",
-  "emirados árabes unidos": "United Arab Emirates",
-};
+let countriesCache = null;
 
 /**
- * Remove acentos e normaliza o texto.
+ * Normaliza um texto para facilitar a comparação.
+ *
+ * Exemplo:
+ * "São Tomé e Príncipe"
+ * ->
+ * "sao tome e principe"
  */
-function normalizeCountryName(value) {
+function normalizeText(value) {
   return String(value || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -63,66 +32,122 @@ function normalizeCountryName(value) {
 }
 
 /**
- * Descobre o país a partir do nome usado na viagem.
+ * Carrega a lista mundial de países.
  *
- * Usa o REST Countries para obter:
- * - nome oficial/comum
- * - código ISO alpha-2
- * - capital
- * - moeda
- * - idioma
- * - fuso horário
+ * O resultado fica em memória para não fazer uma nova consulta
+ * a cada viagem.
+ */
+async function loadCountries() {
+  if (countriesCache) {
+    return countriesCache;
+  }
+
+  const response = await fetch(
+    "https://restcountries.com/v3.1/all?fields=name,translations,cca2,cca3,capital,currencies,languages,timezones,region,subregion"
+  );
+
+  if (!response.ok) {
+    throw new Error("Não foi possível carregar os países.");
+  }
+
+  countriesCache = await response.json();
+
+  return countriesCache;
+}
+
+/**
+ * Descobre automaticamente o país a partir do destino.
  *
- * Documentação:
- * https://restcountries.com/
+ * A busca considera:
+ *
+ * - nome comum em português
+ * - nome oficial em português
+ * - nome comum internacional
+ * - nome oficial internacional
+ * - código ISO de 2 letras
+ * - código ISO de 3 letras
  */
 export async function getCountryInfo(destination) {
-  if (!destination) return null;
-
-  const normalized = normalizeCountryName(destination);
-
-  const searchName =
-    COUNTRY_ALIASES[normalized] || destination;
+  if (!destination) {
+    return null;
+  }
 
   try {
-    const response = await fetch(
-      `https://restcountries.com/v3.1/name/${encodeURIComponent(
-        searchName
-      )}?fullText=true`
-    );
+    const countries = await loadCountries();
 
-    if (!response.ok) {
+    const normalizedDestination = normalizeText(destination);
+
+    const country = countries.find((item) => {
+      const names = [
+        item?.name?.common,
+        item?.name?.official,
+
+        item?.translations?.por?.common,
+        item?.translations?.por?.official,
+
+        item?.translations?.eng?.common,
+        item?.translations?.eng?.official,
+
+        item?.cca2,
+        item?.cca3,
+      ]
+        .filter(Boolean)
+        .map(normalizeText);
+
+      return names.includes(normalizedDestination);
+    });
+
+    if (!country) {
+      console.warn(
+        `País não encontrado automaticamente para: "${destination}"`
+      );
+
       return null;
     }
-
-    const countries = await response.json();
-
-    if (!countries || !countries.length) {
-      return null;
-    }
-
-    const country = countries[0];
 
     return {
-      name: country?.name?.common || destination,
-      officialName: country?.name?.official || null,
+      name: country?.translations?.por?.common ||
+        country?.name?.common ||
+        destination,
+
+      officialName:
+        country?.translations?.por?.official ||
+        country?.name?.official ||
+        null,
+
       iso2: country?.cca2 || null,
+
       iso3: country?.cca3 || null,
-      capital: country?.capital?.[0] || null,
+
+      capital:
+        country?.capital?.[0] ||
+        null,
+
       currency:
         country?.currencies
           ? Object.keys(country.currencies)[0]
           : null,
+
       languages:
         country?.languages
           ? Object.values(country.languages)
           : [],
-      timezones: country?.timezones || [],
-      region: country?.region || null,
-      subregion: country?.subregion || null,
+
+      timezones:
+        country?.timezones || [],
+
+      region:
+        country?.region || null,
+
+      subregion:
+        country?.subregion || null,
     };
   } catch (error) {
-    console.error("Erro ao descobrir país:", error);
+    console.error(
+      "Erro ao descobrir país automaticamente:",
+      error
+    );
+
     return null;
   }
 }
