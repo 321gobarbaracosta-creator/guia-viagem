@@ -273,8 +273,10 @@ function HomeScreen({ navigate }) {
       {highlights && <HighlightsSection highlights={highlights} />}
       
       </div>
+</div>
+)}
 
-      {tip && (
+{tip && (
         <div>
           <SectionLabel>Dica da Babi</SectionLabel>
           <Card className="p-5 bg-[#22A8C9]/[0.06] border-[#22A8C9]/15 relative overflow-hidden">
