@@ -4,8 +4,8 @@
 // Este arquivo é um MOLDE.
 // Não coloque dados reais de clientes aqui.
 //
-// Para criar uma nova viagem, vamos duplicar este modelo e preencher
-// somente os campos necessários.
+// A estrutura abaixo segue exatamente o formato utilizado atualmente
+// pelo site.
 // =========================================================================
 
 export const tripTemplate = {
@@ -13,26 +13,23 @@ export const tripTemplate = {
   // IDENTIFICAÇÃO
   // -----------------------------------------------------------------------
 
-  slug: "nome-da-viagem",
+  id: "",
+  slug: "",
+  published: false,
+  accessPin: null,
 
   client: {
-    name: "",
-  },
-
-  destination: {
-    country: "",
-    city: "",
-    period: "",
+    names: "",
   },
 
   // -----------------------------------------------------------------------
-  // CAPA / HOME
+  // VIAGEM / CAPA
   // -----------------------------------------------------------------------
 
-  cover: {
-    title: "",
-    subtitle: "",
-    image: "",
+  trip: {
+    destination: "",
+    displayDates: "",
+    coverPhoto: "",
   },
 
   // -----------------------------------------------------------------------
@@ -41,26 +38,28 @@ export const tripTemplate = {
 
   flights: [
     {
-      id: "flight-1",
-      type: "outbound",
+      id: "",
       airline: "",
       flightNumber: "",
       date: "",
+
       departure: {
+        time: "",
         airport: "",
         city: "",
-        time: "",
+        terminal: "",
       },
+
       arrival: {
+        time: "",
         airport: "",
         city: "",
-        time: "",
+        terminal: "",
       },
+
       duration: "",
       baggage: "",
     },
-
-    // Adicione outros voos conforme necessário
   ],
 
   // -----------------------------------------------------------------------
@@ -69,11 +68,11 @@ export const tripTemplate = {
 
   hotels: [
     {
-      id: "hotel-1",
+      id: "",
       name: "",
       city: "",
 
-      // URL direta da foto real do hotel
+      // Link direto para a foto do hotel
       photo: "",
 
       checkIn: "",
@@ -87,8 +86,6 @@ export const tripTemplate = {
       // Texto usado para abrir o Google Maps
       mapQuery: "",
     },
-
-    // Adicione outros hotéis conforme necessário
   ],
 
   // -----------------------------------------------------------------------
@@ -97,83 +94,64 @@ export const tripTemplate = {
 
   itinerary: [
     {
-      id: "day-1",
+      id: "",
       date: "",
-      city: "",
+      weekday: "",
       title: "",
+
       activities: [
         {
           time: "",
-          type: "landmark",
+          icon: "",
           title: "",
           description: "",
+          location: null,
         },
       ],
     },
-
-    // Adicione outros dias conforme necessário
   ],
+
+  // -----------------------------------------------------------------------
+  // DESTAQUES
+  // -----------------------------------------------------------------------
+
+  highlights: [
+    {
+      id: "",
+      name: "",
+      type: "",
+      illustration: "",
+    },
+  ],
+
+  // -----------------------------------------------------------------------
+  // CONTATOS DE EMERGÊNCIA
+  //
+  // Estes contatos poderão ser preenchidos automaticamente pela API
+  // de emergência a partir do país da viagem.
+  // -----------------------------------------------------------------------
+
+  emergencyContacts: [],
 
   // -----------------------------------------------------------------------
   // INFORMAÇÕES IMPORTANTES
   // -----------------------------------------------------------------------
 
-  importantInfo: [
-    {
-      label: "",
-      value: "",
-    },
-  ],
+  importantInfo: {
+    currency: "",
+    language: "",
+    timezone: "",
+    plug: "",
+    internet: "",
+    notes: "",
+  },
 
   // -----------------------------------------------------------------------
-  // EMERGÊNCIAS
+  // DICA DA BABI
   // -----------------------------------------------------------------------
 
-  emergency: [
-    {
-      id: "emergency-1",
-      label: "",
-      phone: "",
-      icon: "shield",
-    },
-
-    {
-      id: "emergency-2",
-      label: "",
-      phone: "",
-      icon: "heart",
-    },
-
-    {
-      id: "emergency-3",
-      label: "",
-      phone: "",
-      icon: "flame",
-    },
-  ],
-
-  // -----------------------------------------------------------------------
-  // REPRESENTAÇÃO / EMBAIXADA
-  // -----------------------------------------------------------------------
-
-  embassy: null,
-
-  // Exemplo:
-  //
-  // embassy: {
-  //   label: "Embaixada do Brasil",
-  //   url: "https://..."
-  // },
-
-  // -----------------------------------------------------------------------
-  // DESTAQUES / DICAS
-  // -----------------------------------------------------------------------
-
-  highlights: [],
-
-  // -----------------------------------------------------------------------
-  // OBSERVAÇÕES
-  // -----------------------------------------------------------------------
-
-  notes: [],
+  tip: {
+    text: "",
+    signature: "Babi",
+  },
 };
