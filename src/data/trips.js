@@ -180,7 +180,7 @@ export const trips = {
     representation: {
   label: "Representação brasileira em Portugal",
   note: "Contato oficial — confirme antes da viagem.",
-  url: "...",
+  url: "https://www.gov.br/mre/pt-br/embaixada-bangkok",
       
     },
 
