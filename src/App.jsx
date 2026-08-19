@@ -271,8 +271,6 @@ function HomeScreen({ navigate }) {
       </div>
 
       {highlights && <HighlightsSection highlights={highlights} />}
-
-      {nextFlight && (
       
       </div>
 
