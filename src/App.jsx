@@ -951,14 +951,6 @@ function HelpScreen({ navigate }) {
   </Card>
 )}
           </div>
-
-          <div className="flex items-start gap-2 mt-4 px-1">
-            <AlertTriangle size={14} className="text-[#9CA3AF] mt-0.5 shrink-0" strokeWidth={2} />
-            <p className="font-poppins font-light text-[11.5px] text-[#9CA3AF] leading-relaxed">
-              Números demonstrativos. Confirme e substitua pelos contatos oficiais antes de uma
-              viagem real.
-            </p>
-          </div>
         </div>
       </div>
     </div>
