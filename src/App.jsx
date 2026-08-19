@@ -273,35 +273,7 @@ function HomeScreen({ navigate }) {
       {highlights && <HighlightsSection highlights={highlights} />}
 
       {nextFlight && (
-        <div>
-          <SectionLabel>Seu próximo passo</SectionLabel>
-          <Card className="p-5 relative overflow-hidden">
-            <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#E05220]/[0.07]" />
-            <div className="relative flex items-start gap-3">
-              <div className="w-10 h-10 shrink-0 rounded-full bg-[#E05220]/10 flex items-center justify-center text-[#E05220]">
-                <PlaneTakeoff size={18} strokeWidth={2.2} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-poppins font-semibold text-[13px] text-[#6B7280]">Próximo voo</p>
-                <p className="font-poppins font-bold text-[18px] text-[#1F2937] mt-0.5">
-                  {nextFlight.departure.airport} → {nextFlight.arrival.airport}
-                </p>
-                <p className="font-poppins font-light text-[13px] text-[#6B7280] mt-0.5">
-                  {nextFlight.date} · {nextFlight.departure.time}
-                </p>
-                <p className="font-poppins font-light text-[12px] text-[#9CA3AF] mt-0.5">
-                  {nextFlight.airline} · {nextFlight.flightNumber}
-                </p>
-              </div>
-            </div>
-            <div className="relative mt-4">
-              <GhostLink onClick={() => navigate("trip")}>
-                Ver detalhes <ChevronRight size={14} />
-              </GhostLink>
-            </div>
-          </Card>
-        </div>
-      )}
+
 
       {tip && (
         <div>
