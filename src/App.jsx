@@ -271,8 +271,7 @@ function HomeScreen({ navigate }) {
       </div>
 
       {highlights && <HighlightsSection highlights={highlights} />}
-      
-)}
+  
 
 {tip && (
         <div>
