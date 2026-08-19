@@ -970,13 +970,13 @@ function HelpScreen({ navigate }) {
    NAVEGAÇÃO INFERIOR
    ========================================================================= */
 
-function BottomNav({ current, navigate }) {
-  const items = [
-    { key: "home", label: "Início", icon: HomeIcon },
-    { key: "trip", label: "Viagem", icon: Plane },
-    { key: "itinerary", label: "Roteiro", icon: Calendar },
-    { key: "help", label: "Ajuda", icon: LifeBuoy },
-  ];
+const items = [
+  { key: "home", label: "Início", icon: HomeIcon },
+  { key: "trip", label: "Viagem", icon: Plane },
+  { key: "itinerary", label: "Roteiro", icon: Calendar },
+  { key: "destination", label: "Destino", icon: Globe },
+  { key: "help", label: "Ajuda", icon: LifeBuoy },
+];
 
   return (
     <nav
@@ -1210,6 +1210,7 @@ export default function App() {
               {screen === "home" && <HomeScreen navigate={navigate} />}
               {screen === "trip" && <TripScreen navigate={navigate} />}
               {screen === "itinerary" && <ItineraryScreen navigate={navigate} />}
+              {screen === "destination" && <DestinationScreen navigate={navigate} />}
               {screen === "help" && <HelpScreen navigate={navigate} />}
               {screen === "home" ? <Footer /> : <MinimalFooter />}
               <BottomNav current={screen} navigate={navigate} />
