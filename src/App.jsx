@@ -473,97 +473,7 @@ function TripScreen({ navigate }) {
    ========================================================================= */
 
 function DestinationScreen({ navigate }) {
-  const { trip } = useTrip();
-
-  // ============================================================
-  // DESTINO
-  // Busca automaticamente as informações no destinations.js
-  // ============================================================
-
-  const destinationName = trip?.destination || "";
-
-  const normalize = (text = "") =>
-    text
-      .toString()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim();
-
-  const destinationKey = Object.keys(destinations).find(
-    (key) =>
-      key === normalize(destinationName) ||
-      normalize(destinations[key]?.name) === normalize(destinationName)
-  );
-
-  const destination = destinationKey
-    ? destinations[destinationKey]
-    : null;
-
-  // ============================================================
-  // MÊS DA VIAGEM
-  // Usa a data de início da viagem para selecionar
-  // automaticamente as médias daquele mês.
-  // ============================================================
-
-  const tripDate =
-    trip?.startDate ||
-    trip?.departureDate ||
-    trip?.date ||
-    trip?.start ||
-    trip?.travelDate;
-
-  const parsedDate = tripDate ? new Date(tripDate) : null;
-
-  const monthNames = [
-    "january",
-    "february",
-    "march",
-    "april",
-    "may",
-    "june",
-    "july",
-    "august",
-    "september",
-    "october",
-    "november",
-    "december"
-  ];
-
-  const monthKey =
-    parsedDate && !Number.isNaN(parsedDate.getTime())
-      ? monthNames[parsedDate.getMonth()]
-      : null;
-
-  const monthLabels = {
-    january: "Janeiro",
-    february: "Fevereiro",
-    march: "Março",
-    april: "Abril",
-    may: "Maio",
-    june: "Junho",
-    july: "Julho",
-    august: "Agosto",
-    september: "Setembro",
-    october: "Outubro",
-    november: "Novembro",
-    december: "Dezembro"
-  };
-
-  const monthLabel = monthKey ? monthLabels[monthKey] : "";
-
-  // ============================================================
-  // CIDADES
-  // Mostra as cidades cadastradas para aquele destino.
-  // ============================================================
-
-  const climateCities = destination?.climate?.cities
-    ? Object.values(destination.climate.cities)
-    : [];
-
-  // ============================================================
-  // RENDER
-  // ============================================================
+  const { importantInfo, highlights } = useTrip();
 
   return (
     <div>
@@ -572,308 +482,83 @@ function DestinationScreen({ navigate }) {
         onBack={() => navigate("home")}
       />
 
-      <div className="px-5 py-6 space-y-8">
+      <div className="px-5 py-6 space-y-9">
 
-        {/* ======================================================
-            INFORMAÇÕES PRÁTICAS
-        ====================================================== */}
-
-        {destination?.practicalInfo && (
+        {/* VOCÊ VAI CONHECER */}
+        {highlights && highlights.length > 0 && (
           <div>
-            <SectionLabel>Informações práticas</SectionLabel>
+            <SectionLabel>Você vai conhecer</SectionLabel>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-              <div className="p-4 flex items-start gap-3 border-b border-gray-100">
-                <CreditCard
-                  size={20}
-                  strokeWidth={1.7}
-                  className="text-[#22A8C9] mt-0.5"
-                />
-
-                <div>
-                  <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                    Moeda
-                  </p>
-                  <p className="font-poppins text-[13px] text-[#6B7280] mt-1">
-                    {destination.practicalInfo.currency}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 flex items-start gap-3 border-b border-gray-100">
-                <Globe
-                  size={20}
-                  strokeWidth={1.7}
-                  className="text-[#22A8C9] mt-0.5"
-                />
-
-                <div>
-                  <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                    Idioma
-                  </p>
-                  <p className="font-poppins text-[13px] text-[#6B7280] mt-1">
-                    {destination.practicalInfo.language}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 flex items-start gap-3 border-b border-gray-100">
-                <Clock
-                  size={20}
-                  strokeWidth={1.7}
-                  className="text-[#22A8C9] mt-0.5"
-                />
-
-                <div>
-                  <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                    Fuso horário
-                  </p>
-                  <p className="font-poppins text-[13px] text-[#6B7280] mt-1">
-                    {destination.practicalInfo.timezone}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 flex items-start gap-3 border-b border-gray-100">
-                <Zap
-                  size={20}
-                  strokeWidth={1.7}
-                  className="text-[#22A8C9] mt-0.5"
-                />
-
-                <div>
-                  <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                    Tomada
-                  </p>
-                  <p className="font-poppins text-[13px] text-[#6B7280] mt-1">
-                    {destination.practicalInfo.plug}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 flex items-start gap-3">
-                <Wifi
-                  size={20}
-                  strokeWidth={1.7}
-                  className="text-[#22A8C9] mt-0.5"
-                />
-
-                <div>
-                  <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                    Internet
-                  </p>
-                  <p className="font-poppins text-[13px] text-[#6B7280] mt-1">
-                    {destination.practicalInfo.internet}
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* ======================================================
-            ENTRADA NO PAÍS
-        ====================================================== */}
-
-        {destination?.entry && (
-          <div>
-            <SectionLabel>Entrada no país</SectionLabel>
-
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-              <div className="p-4 border-b border-gray-100">
-                <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                  Documentos
-                </p>
-                <p className="font-poppins text-[13px] leading-5 text-[#6B7280] mt-1.5">
-                  {destination.entry.documents}
-                </p>
-              </div>
-
-              <div className="p-4 border-b border-gray-100">
-                <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                  Necessidade de visto
-                </p>
-                <p className="font-poppins text-[13px] leading-5 text-[#6B7280] mt-1.5">
-                  {destination.entry.visa}
-                </p>
-              </div>
-
-              <div className="p-4 border-b border-gray-100">
-                <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                  Requisitos de entrada
-                </p>
-                <p className="font-poppins text-[13px] leading-5 text-[#6B7280] mt-1.5">
-                  {destination.entry.requirements}
-                </p>
-              </div>
-
-              <div className="p-4">
-                <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                  Seguro viagem
-                </p>
-                <p className="font-poppins text-[13px] leading-5 text-[#6B7280] mt-1.5">
-                  {destination.entry.insurance}
-                </p>
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* ======================================================
-            CLIMA
-        ====================================================== */}
-
-        {destination?.climate && climateCities.length > 0 && (
-          <div>
-            <SectionLabel>Clima</SectionLabel>
-
-            <div className="space-y-4">
-
-              {climateCities.map((city) => {
-                const monthData =
-                  monthKey && city.months
-                    ? city.months[monthKey]
-                    : null;
-
-                return (
-                  <div
-                    key={city.name}
-                    className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-                  >
-
-                    <div className="p-4 border-b border-gray-100">
-                      <p className="font-poppins font-semibold text-[16px] text-[#1F2937]">
-                        {city.name}
-                      </p>
-
-                      {monthLabel && (
-                        <p className="font-poppins text-[12px] text-[#22A8C9] mt-1">
-                          Médias para {monthLabel}
-                        </p>
-                      )}
-                    </div>
-
-                    {monthData ? (
-                      <>
-                        <div className="grid grid-cols-2 border-b border-gray-100">
-
-                          <div className="p-4 text-center border-r border-gray-100">
-                            <p className="font-poppins text-[11px] text-[#6B7280] uppercase tracking-wide">
-                              Máxima média
-                            </p>
-
-                            <p className="font-poppins font-semibold text-[22px] text-[#1F2937] mt-1">
-                              {monthData.max}°C
-                            </p>
-                          </div>
-
-                          <div className="p-4 text-center">
-                            <p className="font-poppins text-[11px] text-[#6B7280] uppercase tracking-wide">
-                              Mínima média
-                            </p>
-
-                            <p className="font-poppins font-semibold text-[22px] text-[#1F2937] mt-1">
-                              {monthData.min}°C
-                            </p>
-                          </div>
-
-                        </div>
-
-                        <div className="p-4 border-b border-gray-100">
-                          <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                            Características
-                          </p>
-
-                          <p className="font-poppins text-[13px] leading-5 text-[#6B7280] mt-1.5">
-                            {monthData.characteristics}
-                          </p>
-                        </div>
-
-                        <div className="p-4">
-                          <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
-                            O que levar
-                          </p>
-
-                          <p className="font-poppins text-[13px] leading-5 text-[#6B7280] mt-1.5">
-                            {monthData.whatToPack}
-                          </p>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="p-4">
-                        <p className="font-poppins text-[13px] leading-5 text-[#6B7280]">
-                          Consulte as condições climáticas próximas à sua viagem.
-                        </p>
-                      </div>
-                    )}
-
-                  </div>
-                );
-              })}
-
-              {/* LINK ACCUWEATHER */}
-
-              {destination.climate.accuweather && (
-                <a
-                  href={destination.climate.accuweather}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full rounded-xl border border-[#22A8C9]/30 bg-white px-4 py-3 font-poppins font-semibold text-[12px] text-[#22A8C9] shadow-sm"
+            <div className="grid grid-cols-3 gap-3">
+              {highlights.map((item) => (
+                <Card
+                  key={item.id}
+                  className="min-h-[110px] flex flex-col items-center justify-center text-center px-2"
                 >
-                  <ExternalLink size={16} />
-                  Ver previsão atualizada no AccuWeather
-                </a>
-              )}
+                  <div className="text-[#22A8C9] mb-3">
+                    <Globe size={24} strokeWidth={1.5} />
+                  </div>
 
+                  <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
+                    {item.name}
+                  </p>
+                </Card>
+              ))}
             </div>
           </div>
         )}
 
-        {/* ======================================================
-            DICAS DA BABI
-        ====================================================== */}
+        {/* INFORMAÇÕES PRÁTICAS */}
+        <div>
+          <SectionLabel>Informações práticas</SectionLabel>
 
-        {destination?.babiTips && (
-          <div>
-            <SectionLabel>Dicas da Babi</SectionLabel>
+          <Card className="overflow-hidden">
+            <div className="px-5 py-2">
 
-            <div className="bg-[#FFF7F2] rounded-2xl border border-[#E05220]/10 p-5">
+              <InfoAccordionRow
+                icon={CreditCard}
+                label="Moeda"
+                value={importantInfo.currency}
+              />
 
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg">💡</span>
+              <InfoAccordionRow
+                icon={Globe}
+                label="Idioma"
+                value={importantInfo.language}
+              />
 
-                <p className="font-poppins font-semibold text-[14px] text-[#E05220]">
-                  Uma dica especial para sua viagem
-                </p>
-              </div>
+              <InfoAccordionRow
+                icon={Clock}
+                label="Fuso horário"
+                value={importantInfo.timezone}
+              />
 
-              <p className="font-poppins text-[13px] leading-6 text-[#4B5563]">
-                {destination.babiTips}
+              <InfoAccordionRow
+                icon={Zap}
+                label="Tomada"
+                value={importantInfo.plug || "Confirme antes da viagem"}
+              />
+
+              <InfoAccordionRow
+                icon={Wifi}
+                label="Internet"
+                value={importantInfo.internet}
+              />
+
+            </div>
+
+            {importantInfo.notes && (
+              <p className="px-5 pb-5 font-poppins font-light text-[11.5px] leading-relaxed text-[#9CA3AF]">
+                {importantInfo.notes}
               </p>
-
-            </div>
-          </div>
-        )}
-
-        {/* ======================================================
-            AVISO
-        ====================================================== */}
-
-        <p className="font-poppins text-[10px] leading-4 text-gray-400 text-center px-3">
-          As informações acima são orientativas e podem sofrer alterações.
-          Confira documentos, requisitos de entrada e condições climáticas
-          próximas à sua viagem.
-        </p>
+            )}
+          </Card>
+        </div>
 
       </div>
     </div>
   );
 }
-    
 
 /* =========================================================================
    TELA · ROTEIRO
