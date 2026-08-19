@@ -548,6 +548,62 @@ function DayBlock({ day, isOpen, onToggle }) {
   const firstActivity = activities[0];
   const mainActivity = activities[0];
 
+    // ============================================================
+  // ROTA DO VOO
+  // Usa os campos estruturados quando existirem.
+  // Caso contrário, extrai a rota da descrição (ex.: "GRU → LIM").
+  // ============================================================
+  function getFlightRoute(activity) {
+    if (!activity) {
+      return { origin: "—", destination: "—" };
+    }
+
+    // Caso os dados já estejam estruturados
+    if (activity.origin && activity.destination) {
+      return {
+        origin:
+          typeof activity.origin === "object"
+            ? activity.origin.airport || activity.origin.code || "—"
+            : activity.origin,
+        destination:
+          typeof activity.destination === "object"
+            ? activity.destination.airport ||
+              activity.destination.code ||
+              "—"
+            : activity.destination,
+      };
+    }
+
+    // Caso use from / to
+    if (activity.from && activity.to) {
+      return {
+        origin: activity.from,
+        destination: activity.to,
+      };
+    }
+
+    // Fallback: extrai "GRU → LIM" da descrição
+    const routeText = String(activity.description || "");
+
+    const routeMatch = routeText.match(
+      /\b([A-Z]{3})\s*(?:→|->|–|-)\s*([A-Z]{3})\b/
+    );
+
+    if (routeMatch) {
+      return {
+        origin: routeMatch[1],
+        destination: routeMatch[2],
+      };
+    }
+
+    return {
+      origin: "—",
+      destination: "—",
+    };
+  }
+
+  const flightRoute = getFlightRoute(firstActivity);
+
   return (
     <div
       className={`day-block day-${dayType} ${
@@ -585,47 +641,46 @@ function DayBlock({ day, isOpen, onToggle }) {
 
       {isOpen && (
         <div className="day-content">
-
           {/* =========================
               VOOS
           ========================== */}
           {dayType === "flight" && (
             <div className="flight-feature">
               <div className="flight-route">
+
+                {/* ORIGEM */}
                 <div>
                   <span>ORIGEM</span>
-                  <strong>
-                    {firstActivity?.origin ||
-                      firstActivity?.from ||
-                      firstActivity?.title ||
-                      "—"}
-                  </strong>
+                  <strong>{flightRoute.origin}</strong>
                 </div>
 
+                {/* AVIÃO */}
                 <div className="flight-line">
                   <Plane size={20} />
                 </div>
 
+                {/* DESTINO */}
                 <div className="flight-destination">
                   <span>DESTINO</span>
-                  <strong>
-                    {firstActivity?.destination ||
-                      firstActivity?.to ||
-                      "—"}
-                  </strong>
+                  <strong>{flightRoute.destination}</strong>
                 </div>
+
               </div>
 
               <div className="flight-details">
                 {activities.map((activity, index) => (
                   <div className="flight-detail" key={index}>
+
                     <span>{activity.time || "—"}</span>
+
                     <div>
                       <strong>{activity.title}</strong>
+
                       {activity.description && (
                         <p>{activity.description}</p>
                       )}
                     </div>
+
                   </div>
                 ))}
               </div>
