@@ -1058,7 +1058,7 @@ function MinimalFooter() {
       <img
         src="/logo.png"
         alt="3,2,1 GO! Bárbara Costa"
-        className="mx-auto h-8 w-auto object-contain opacity-75"
+        className="mx-auto h-10 w-auto object-contain opacity-75"
       />
     </footer>
   );
