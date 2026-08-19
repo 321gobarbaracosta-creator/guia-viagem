@@ -18,7 +18,7 @@ export const agency = {
   name: "3,2,1 GO! Bárbara Costa",
   tagline: "Viagens personalizadas para você viajar melhor.",
   // Placeholder — substituir pelo número real da agência antes de publicar.
-  whatsapp: "WHATSAPP_DA_AGENCIA",
+  whatsapp: "https://we.me/5512981587726",
   instagramHandle: "@321go.barbaracosta", // placeholder demonstrativo
   instagramUrl: "https://instagram.com/", // placeholder demonstrativo
 };
@@ -177,10 +177,11 @@ export const trips = {
       { label: "Bombeiros", phone: "199", icon: "flame" },
     ],
 
-    embassy: {
-      label: "Representação brasileira na Tailândia",
-      note: "Contato oficial — confirme antes da viagem.",
-      url: "#", // placeholder demonstrativo
+    representation: {
+  label: "Representação brasileira em Portugal",
+  note: "Contato oficial — confirme antes da viagem.",
+  url: "...",
+      
     },
 
     importantInfo: {
