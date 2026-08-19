@@ -13,6 +13,7 @@ import {
   ChevronUp,
   ChevronLeft,
   Navigation,
+  ShoppingBag,
   ExternalLink,
   Clock,
   Luggage,
