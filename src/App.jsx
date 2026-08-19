@@ -891,7 +891,10 @@ function ItineraryScreen({ navigate }) {
    ========================================================================= */
 
 function HelpScreen({ navigate }) {
-  const { emergencyContacts, embassy } = useTrip();
+  const {
+    emergencyContacts = [],
+    embassy = null,
+  } = useTrip();
   return (
     <div>
       <ScreenHeader title="Precisa de ajuda?" onBack={() => navigate("home")} />
@@ -930,21 +933,29 @@ function HelpScreen({ navigate }) {
               );
             })}
 
-            <Card className="p-4 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-[#22A8C9]/10 flex items-center justify-center text-[#22A8C9] shrink-0">
-                <Building2 size={17} strokeWidth={2} />
-              </div>
-              <p className="font-poppins font-semibold text-[14px] text-[#1F2937] flex-1">{embassy.label}</p>
-            <a
-  href={embassy.url}
-  target="_blank"
-  rel="noopener noreferrer"
-  onClick={(e) => e.stopPropagation()}
-  className="font-poppins font-medium text-[12px] text-[#22A8C9] flex items-center gap-1"
->
-  Ver contato <ExternalLink size={12} />
-</a>
-            </Card>
+        {embassy && (
+  <Card className="p-4 flex items-center gap-4">
+    <div className="w-10 h-10 rounded-full bg-[#22A8C9]/10 flex items-center justify-center text-[#22A8C9] shrink-0">
+      <Building2 size={17} strokeWidth={2} />
+    </div>
+
+    <p className="font-poppins font-semibold text-[14px] text-[#1F2937] flex-1">
+      {embassy.label}
+    </p>
+
+    <a
+      href={embassy?.url || "#"}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      className="font-poppins font-medium text-[12px] text-[#22A8C9] flex items-center gap-1"
+    >
+      Ver contato <ExternalLink size={12} />
+    </a>
+  </Card>
+)}
+             </Card>
+)}
           </div>
 
           <div className="flex items-start gap-2 mt-4 px-1">
