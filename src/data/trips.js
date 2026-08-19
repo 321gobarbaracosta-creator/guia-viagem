@@ -18,7 +18,7 @@ export const agency = {
   name: "3,2,1 GO! Bárbara Costa",
   tagline: "Viagens personalizadas para você viajar melhor.",
   // Placeholder — substituir pelo número real da agência antes de publicar.
-  whatsapp: "https://we.me/5512981587726",
+  whatsapp: "5512981587726",
   instagramHandle: "@321go.barbaracosta", // placeholder demonstrativo
   instagramUrl: "https://instagram.com/", // placeholder demonstrativo
 };
