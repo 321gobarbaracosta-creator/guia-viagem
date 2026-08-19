@@ -20,7 +20,7 @@ export const agency = {
   // Placeholder — substituir pelo número real da agência antes de publicar.
   whatsapp: "5512981587726",
   instagramHandle: "@321go.barbaracosta", // placeholder demonstrativo
-  instagramUrl: "https://instagram.com/", // placeholder demonstrativo
+  instagramUrl: "https://instagram.com/321go.barbaracosta", // placeholder demonstrativo
 };
 
 export const trips = {
