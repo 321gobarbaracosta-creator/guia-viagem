@@ -32,6 +32,7 @@ import {
   Flame,
   Building2,
   Ticket,
+  Landmark,
   ShieldCheck,
 } from "lucide-react";
 
