@@ -426,14 +426,10 @@ function HotelCard({ hotel }) {
           <p className="font-poppins font-light text-[12.5px] leading-snug">{hotel.address}</p>
         </div>
 
-        <div className="flex flex-wrap gap-2 mt-4">
-          <GhostLink href={mapsUrlFor(hotel.mapQuery)}>
-            <MapPin size={13} /> Como chegar
-          </GhostLink>
-          <span className="text-black/10">•</span>
-          <GhostLink href={hotel.website}>
-            Ver site do hotel <ExternalLink size={12} />
-          </GhostLink>
+       <div className="flex flex-wrap gap-2 mt-4">
+  <GhostLink href={mapsUrlFor(hotel.mapQuery)}>
+    <MapPin size={13} /> Como chegar
+  </GhostLink>
         </div>
       </div>
     </Card>
