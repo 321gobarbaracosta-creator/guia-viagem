@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
+import { destinations } from "./data/destinations.js";
   Home as HomeIcon,
   Plane,
   PlaneTakeoff,
