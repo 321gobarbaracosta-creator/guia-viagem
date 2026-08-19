@@ -545,8 +545,43 @@ function DayBlock({ day, isOpen, onToggle }) {
     Icon = ShoppingBag;
   }
 
-  const firstActivity = activities[0];
-  const mainActivity = activities[0];
+const flightActivity = activities.find(
+  (a) =>
+    a.type === "flight" ||
+    a.kind === "flight" ||
+    a.title?.toLowerCase().includes("voo") ||
+    a.title?.toLowerCase().includes("embarque")
+);
+
+const getFlightRoute = (activity) => {
+  if (!activity) return { origin: "—", destination: "—" };
+
+  if (activity.origin || activity.destination) {
+    return {
+      origin: activity.origin || "—",
+      destination: activity.destination || "—",
+    };
+  }
+
+  const text = `${activity.description || ""} ${activity.title || ""}`;
+  const match = text.match(/\b([A-Z]{3})\s*[→-]\s*([A-Z]{3})\b/);
+
+  if (match) {
+    return {
+      origin: match[1],
+      destination: match[2],
+    };
+  }
+
+  return {
+    origin: "—",
+    destination: "—",
+  };
+};
+
+const flightRoute = getFlightRoute(flightActivity);
+
+const mainActivity = activities[0];
 
     // ============================================================
   // ROTA DO VOO
