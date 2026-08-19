@@ -954,8 +954,6 @@ function HelpScreen({ navigate }) {
     </a>
   </Card>
 )}
-             </Card>
-)}
           </div>
 
           <div className="flex items-start gap-2 mt-4 px-1">
