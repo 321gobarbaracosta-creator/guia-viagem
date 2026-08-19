@@ -108,6 +108,58 @@ export const tripTemplate = {
           location: null,
         },
       ],
+        // -----------------------------------------------------------------------
+  // TRANSFERS
+  // -----------------------------------------------------------------------
+
+  transfers: [
+    {
+      id: "",
+      company: "",
+      type: "",
+      passengers: "",
+      
+      from: "",
+      to: "",
+
+      date: "",
+      flight: "",
+
+      pickupWindow: "",
+      meetingPoint: "",
+
+      instructions: "",
+      emergencyPhone: "",
+    },
+  ],
+
+  // -----------------------------------------------------------------------
+  // PASSEIOS / EXPERIÊNCIAS
+  // -----------------------------------------------------------------------
+
+  experiences: [
+    {
+      id: "",
+      title: "",
+      date: "",
+      time: "",
+
+      company: "",
+      reservationCode: "",
+
+      passengers: "",
+      pickupHotel: "",
+
+      description: "",
+
+      included: [],
+      notIncluded: [],
+
+      instructions: "",
+      contactPhone: "",
+      contactEmail: "",
+    },
+  ],
     },
   ],
 
