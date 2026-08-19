@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { destinations } from "./data/destinations.js";
+import {
   Home as HomeIcon,
   Plane,
   PlaneTakeoff,
@@ -33,12 +33,9 @@ import { destinations } from "./data/destinations.js";
   Building2,
   Ticket,
   ShieldCheck,
-  Landmark,
-  ShoppingBag,
-  Utensils,
-  ChevronRight,
 } from "lucide-react";
 
+import { destinations } from "./data/destinations.js";
 import { agency } from "./data/trips.js";
 import { getTripBySlug, getDefaultSlug } from "./lib/dataSource.js";
 import { getSlugFromPath } from "./lib/routing.js";
