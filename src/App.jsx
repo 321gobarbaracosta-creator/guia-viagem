@@ -970,6 +970,7 @@ function HelpScreen({ navigate }) {
    NAVEGAÇÃO INFERIOR
    ========================================================================= */
 
+function BottomNav({ current, navigate }) {
 const items = [
   { key: "home", label: "Início", icon: HomeIcon },
   { key: "trip", label: "Viagem", icon: Plane },
