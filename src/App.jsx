@@ -1022,8 +1022,11 @@ function BottomNav({ current, navigate }) {
 function Footer() {
   return (
     <footer className="px-5 pt-2 pb-28 text-center">
-      <BrandMark className="justify-center mb-2" />
-      <p className="font-poppins font-bold text-[13px] text-[#1F2937]">{agency.name}</p>
+      <img
+  src="/logo.png"
+  alt="3,2,1 GO! Bárbara Costa"
+  className="mx-auto mb-3 h-12 w-auto object-contain"
+/>
       <p className="font-poppins font-light text-[12px] text-[#9CA3AF] mt-1">{agency.tagline}</p>
       <div className="flex items-center justify-center gap-4 mt-3">
         <a
@@ -1052,7 +1055,11 @@ function Footer() {
 function MinimalFooter() {
   return (
     <footer className="px-5 pt-3 pb-28 text-center">
-      <p className="font-poppins font-light text-[11px] tracking-wide text-[#B7B2A9]">{agency.name}</p>
+      <img
+        src="/logo.png"
+        alt="3,2,1 GO! Bárbara Costa"
+        className="mx-auto h-8 w-auto object-contain opacity-75"
+      />
     </footer>
   );
 }
