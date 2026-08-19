@@ -74,10 +74,8 @@ export const trips = {
         id: "hotel-1",
         name: "Riva Arun Bangkok",
         city: "Bangkok",
-        // Foto provisória — NÃO é uma foto real do hotel. Substituir pela foto
-        // oficial fornecida pelo hotel assim que disponível.
-        photo: "https://picsum.photos/seed/321go-hotel-bangkok/800/600",
-        isPlaceholderPhoto: true,
+        photo: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/09/be/b8/above-riva-rooftop-restaurant.jpg?w=900&h=500&s=1",
+        isPlaceholderPhoto: false,
         checkIn: "12 JAN · 14:00",
         checkOut: "16 JAN · 12:00",
         address: "Maha Rat Road, Phra Nakhon, Bangkok",
@@ -89,8 +87,8 @@ export const trips = {
         id: "hotel-2",
         name: "The Slate Phuket",
         city: "Phuket",
-        photo: "https://picsum.photos/seed/321go-hotel-phuket/800/600",
-        isPlaceholderPhoto: true,
+     photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3Ik6KQcDCVo4L0UobyNzVkp1KH4RYuc-D-2ZfeIAQvpFshp6fuTNBils&s=10",
+isPlaceholderPhoto: false,
         checkIn: "16 JAN · 14:00",
         checkOut: "22 JAN · 12:00",
         address: "Nai Yang Beach, Phuket",
