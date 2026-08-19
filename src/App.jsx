@@ -266,7 +266,7 @@ function HomeScreen({ navigate }) {
 
       <div className="grid grid-cols-2 gap-3">
         <QuickAccessCard icon={Plane} label="Minha viagem" sub="Voos e hotéis" onClick={() => navigate("trip")} />
-        <QuickAccessCard icon={Calendar} label="Meu roteiro" sub="Dia a dia" onClick={() => navigate("itinerary")} />
+        <QuickAccessCard icon={Calendar} label="Meu roteiro" sub="Dia-a-dia" onClick={() => navigate("itinerary")} />
         <QuickAccessCard icon={LifeBuoy} label="Preciso de ajuda" sub="Emergências" onClick={() => navigate("help")} />
       </div>
 
@@ -732,7 +732,6 @@ const mainActivity = activities[0];
             <div className="experience-feature">
               {mainActivity && (
                 <div className="experience-main">
-                  <div className="experience-number">01</div>
 
                   <div className="experience-main-content">
                     <span>
