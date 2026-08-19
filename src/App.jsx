@@ -443,8 +443,7 @@ function InfoAccordionRow({ icon: Icon, label, value }) {
 }
 
 function TripScreen({ navigate }) {
-  const { flights, hotels, importantInfo } = useTrip();
-  const [infoOpen, setInfoOpen] = useState(false);
+  const { flights, hotels } = useTrip();
 
   return (
     <div>
@@ -468,36 +467,97 @@ function TripScreen({ navigate }) {
           </div>
         </div>
 
-        <div>
-          <SectionLabel>Antes de viajar</SectionLabel>
-          <Card className="overflow-hidden">
-            <button
-              onClick={() => setInfoOpen((v) => !v)}
-              aria-expanded={infoOpen}
-              className="w-full flex items-center justify-between px-5 py-4 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#22A8C9] rounded-[22px]"
-            >
-              <span className="font-poppins font-semibold text-[14px] text-[#1F2937]">
-                Informações práticas do destino
-              </span>
-              <ChevronDown
-                size={18}
-                className={`text-[#6B7280] transition-transform ${infoOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-            {infoOpen && (
-              <div className="px-5 pb-5">
-                <InfoAccordionRow icon={CreditCard} label="Moeda" value={importantInfo.currency} />
-                <InfoAccordionRow icon={Globe} label="Idioma" value={importantInfo.language} />
-                <InfoAccordionRow icon={Clock} label="Fuso horário" value={importantInfo.timezone} />
-                <InfoAccordionRow icon={Zap} label="Tomada" value={importantInfo.plug} />
-                <InfoAccordionRow icon={Wifi} label="Internet" value={importantInfo.internet} />
-                <p className="font-poppins font-light text-[11.5px] text-[#9CA3AF] mt-3 leading-relaxed">
-                  {importantInfo.notes}
-                </p>
               </div>
+    </div>
+  );
+}
+/* =========================================================================
+   TELA · DESTINO
+   ========================================================================= */
+
+function DestinationScreen({ navigate }) {
+  const { importantInfo, highlights } = useTrip();
+
+  return (
+    <div>
+      <ScreenHeader
+        title="Destino"
+        onBack={() => navigate("home")}
+      />
+
+      <div className="px-5 py-6 space-y-9">
+
+        {/* VOCÊ VAI CONHECER */}
+        {highlights && highlights.length > 0 && (
+          <div>
+            <SectionLabel>Você vai conhecer</SectionLabel>
+
+            <div className="grid grid-cols-3 gap-3">
+              {highlights.map((item) => (
+                <Card
+                  key={item.id}
+                  className="min-h-[110px] flex flex-col items-center justify-center text-center px-2"
+                >
+                  <div className="text-[#22A8C9] mb-3">
+                    <Globe size={24} strokeWidth={1.5} />
+                  </div>
+
+                  <p className="font-poppins font-semibold text-[13px] text-[#1F2937]">
+                    {item.name}
+                  </p>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* INFORMAÇÕES PRÁTICAS */}
+        <div>
+          <SectionLabel>Informações práticas</SectionLabel>
+
+          <Card className="overflow-hidden">
+            <div className="px-5 py-2">
+
+              <InfoAccordionRow
+                icon={CreditCard}
+                label="Moeda"
+                value={importantInfo.currency}
+              />
+
+              <InfoAccordionRow
+                icon={Globe}
+                label="Idioma"
+                value={importantInfo.language}
+              />
+
+              <InfoAccordionRow
+                icon={Clock}
+                label="Fuso horário"
+                value={importantInfo.timezone}
+              />
+
+              <InfoAccordionRow
+                icon={Zap}
+                label="Tomada"
+                value={importantInfo.plug || "Confirme antes da viagem"}
+              />
+
+              <InfoAccordionRow
+                icon={Wifi}
+                label="Internet"
+                value={importantInfo.internet}
+              />
+
+            </div>
+
+            {importantInfo.notes && (
+              <p className="px-5 pb-5 font-poppins font-light text-[11.5px] leading-relaxed text-[#9CA3AF]">
+                {importantInfo.notes}
+              </p>
             )}
           </Card>
         </div>
+
       </div>
     </div>
   );
