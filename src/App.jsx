@@ -588,57 +588,7 @@ const mainActivity = activities[0];
   // Usa os campos estruturados quando existirem.
   // Caso contrário, extrai a rota da descrição (ex.: "GRU → LIM").
   // ============================================================
-  function getFlightRoute(activity) {
-    if (!activity) {
-      return { origin: "—", destination: "—" };
-    }
-
-    // Caso os dados já estejam estruturados
-    if (activity.origin && activity.destination) {
-      return {
-        origin:
-          typeof activity.origin === "object"
-            ? activity.origin.airport || activity.origin.code || "—"
-            : activity.origin,
-        destination:
-          typeof activity.destination === "object"
-            ? activity.destination.airport ||
-              activity.destination.code ||
-              "—"
-            : activity.destination,
-      };
-    }
-
-    // Caso use from / to
-    if (activity.from && activity.to) {
-      return {
-        origin: activity.from,
-        destination: activity.to,
-      };
-    }
-
-    // Fallback: extrai "GRU → LIM" da descrição
-    const routeText = String(activity.description || "");
-
-    const routeMatch = routeText.match(
-      /\b([A-Z]{3})\s*(?:→|->|–|-)\s*([A-Z]{3})\b/
-    );
-
-    if (routeMatch) {
-      return {
-        origin: routeMatch[1],
-        destination: routeMatch[2],
-      };
-    }
-
-    return {
-      origin: "—",
-      destination: "—",
-    };
-  }
-
-  const flightRoute = getFlightRoute(firstActivity);
-
+  
   return (
     <div
       className={`day-block day-${dayType} ${
