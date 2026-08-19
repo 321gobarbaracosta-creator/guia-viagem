@@ -273,7 +273,8 @@ function HomeScreen({ navigate }) {
       {highlights && <HighlightsSection highlights={highlights} />}
 
       {nextFlight && (
-
+      
+      </div>
 
       {tip && (
         <div>
