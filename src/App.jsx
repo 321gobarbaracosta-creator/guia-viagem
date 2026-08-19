@@ -933,9 +933,14 @@ function HelpScreen({ navigate }) {
                 <Building2 size={17} strokeWidth={2} />
               </div>
               <p className="font-poppins font-semibold text-[14px] text-[#1F2937] flex-1">{embassy.label}</p>
-              <GhostLink href={embassy.url}>
-                Ver contato <ExternalLink size={12} />
-              </GhostLink>
+             <a
+  href={embassy.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="font-poppins font-medium text-[12px] text-[#22A8C9] flex items-center gap-1"
+>
+  Ver contato <ExternalLink size={12} />
+</a>
             </Card>
           </div>
 
