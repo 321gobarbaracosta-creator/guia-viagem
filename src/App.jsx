@@ -265,10 +265,34 @@ function HomeScreen({ navigate }) {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <QuickAccessCard icon={Plane} label="Minha viagem" sub="Voos e hotéis" onClick={() => navigate("trip")} />
-        <QuickAccessCard icon={Calendar} label="Meu roteiro" sub="Dia-a-dia" onClick={() => navigate("itinerary")} />
-        <QuickAccessCard icon={LifeBuoy} label="Preciso de ajuda" sub="Emergências" onClick={() => navigate("help")} />
-      </div>
+  <QuickAccessCard
+    icon={Plane}
+    label="Minha viagem"
+    sub="Voos e hotéis"
+    onClick={() => navigate("trip")}
+  />
+
+  <QuickAccessCard
+    icon={Calendar}
+    label="Meu roteiro"
+    sub="Dia-a-dia"
+    onClick={() => navigate("itinerary")}
+  />
+
+  <QuickAccessCard
+    icon={Globe}
+    label="Destino"
+    sub="Informações úteis"
+    onClick={() => navigate("destination")}
+  />
+
+  <QuickAccessCard
+    icon={LifeBuoy}
+    label="Preciso de ajuda"
+    sub="Emergências"
+    onClick={() => navigate("help")}
+  />
+</div>
 
       {highlights && <HighlightsSection highlights={highlights} />}
   
